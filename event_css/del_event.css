@@ -1,0 +1,18 @@
+.hidden-xs{
+	text-align: center;
+    font:bold normal 49px Footlight MT Light;
+    text-decoration:underline;
+    font-color:black;
+}
+body   {
+	background-image:url(background.jpg);
+	background-size: 1600px 800px;
+	background-repeat: no-repeat;
+}
+.control-label col-md-3 col-sm-3{
+	color:white;
+}
+.jumbotron {
+	background-color:rgba(50,50,50,0.02);
+    	
+}
