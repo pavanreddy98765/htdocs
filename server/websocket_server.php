@@ -17,7 +17,8 @@ class Chat implements MessageComponentInterface {
 
 	public function onOpen(ConnectionInterface $conn) {
 		$this->clients->attach($conn);
-		// $this->users[$conn->resourceId] = $conn;
+		//$this->clients[$conn->resourceId] = $conn;
+		 $this->users[$conn->resourceId] = "";
 	}
 
 	public function onClose(ConnectionInterface $conn) {
@@ -26,11 +27,13 @@ class Chat implements MessageComponentInterface {
 	}
 
 	public function onMessage(ConnectionInterface $from,  $data) {
+
 		$from_id = $from->resourceId;
 		$data = json_decode($data);
 		$type = $data->type;
 		switch ($type) {
 			case 'chat':
+			{
 			$host = "localhost";
 			$username = "root";
 			$password = "";
@@ -40,7 +43,6 @@ class Chat implements MessageComponentInterface {
 				$chat_msg = $data->chat_msg;
 				$user1 = $data->user1;
 				$user2 = $data->user2;
-				$time= $data->time;
 				$str=$chat_msg;
 				$x=1;
 				$ver = mysqli_query($con,"Insert into messages Values('$user1','$user2','$chat_msg','$x',CURRENT_TIME())");
@@ -63,10 +65,19 @@ class Chat implements MessageComponentInterface {
 					
 					if($from!=$client)
 					{
+						if($this->users[$client->resourceId]==$user2||$this->users[$client->resourceId]==$user1){
 						$client->send(json_encode(array("type"=>$type,"msg"=>$response_to,"message"=>$str,"user1"=>$user1,"user2"=>$user2,"date"=>$reformatted_date,"time"=>$reformatted_time)));
+						}
 					}
+
 				}
 				break;
+			}
+			case 'socket':
+			{
+			$this->users[$from->resourceId]=$data->user_id;
+			break;
+			}
 		}
 	}
 
